@@ -1662,6 +1662,7 @@ class ToggleEntity(
     entity_description: ToggleEntityDescription
     _attr_is_on: bool | None = None
     _attr_state: None = None
+    _attr_needs_refresh: bool | None = None
 
     @property
     @final
@@ -1670,6 +1671,12 @@ class ToggleEntity(
         if (is_on := self.is_on) is None:
             return None
         return STATE_ON if is_on else STATE_OFF
+
+    @property
+    def needs_refresh(self) -> bool | None:
+        """Return True if entity needs refresh."""
+        _LOGGER.info(f"needs_refresh(): {self._attr_needs_refresh}")  # noqa: G004
+        return self._attr_needs_refresh
 
     @cached_property
     def is_on(self) -> bool | None:
@@ -1691,6 +1698,22 @@ class ToggleEntity(
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the entity off."""
         await self.hass.async_add_executor_job(ft.partial(self.turn_off, **kwargs))
+
+    def refresh(self, **kwargs: Any) -> None:
+        """Refresh entity params without turning it on.
+
+        This method should typically not be implemented by integrations, it's enough to
+        implement turn_on.
+        """
+        raise NotImplementedError
+
+    async def async_refresh(self, **kwargs: Any) -> None:
+        """Refresh entity params without turning it on.
+
+        This method should typically not be implemented by integrations, it's enough to
+        implement async_turn_on.
+        """
+        await self.hass.async_add_executor_job(ft.partial(self.refresh, **kwargs))
 
     @final
     def toggle(self, **kwargs: Any) -> None:

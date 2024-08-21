@@ -1512,6 +1512,7 @@ COMPRESSED_STATE_LAST_UPDATED: Final = "lu"
 SERVICE_TURN_ON: Final = "turn_on"
 SERVICE_TURN_OFF: Final = "turn_off"
 SERVICE_TOGGLE: Final = "toggle"
+SERVICE_REFRESH: Final = "refresh"
 SERVICE_RELOAD: Final = "reload"
 
 SERVICE_VOLUME_UP: Final = "volume_up"
